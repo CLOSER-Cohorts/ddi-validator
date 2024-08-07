@@ -51,7 +51,7 @@
             const result = document.querySelector(".result");
 
             selectElement.addEventListener("change", (event) => {
-console.log(event.target.value)
+
                 switch (event.target.value) {
                     case 'ddi32':
                         profile = profile32;
@@ -64,7 +64,6 @@ console.log(event.target.value)
                 }
 
                 setInputToValidator()
-                console.log(profile)
             });
 
             async function executePostRequestWithoutToken(url, requestBody) {
@@ -90,30 +89,30 @@ console.log(event.target.value)
             inputFileElement.addEventListener("change", addValidateButton, false);
 
 
-    function addValidateButton() {
+            function addValidateButton() {
 
-      fileList = this.files;
+                fileList = this.files;
 
-      setInputToValidator()
-      
-      const validateFileButtonDiv = document.getElementById("validateFileContainer");
-      
-      const validateFileButtonObject = document.createElement("button");
-     
-      validateFileButtonObject.textContent = "Validate"
+                setInputToValidator()
 
-      validateFileButtonObject.setAttribute('aria-label', 'Validate uploaded files')
+                const validateFileButtonDiv = document.getElementById("validateFileContainer");
 
-      validateFileButtonObject.addEventListener("click", () => validateDdi(), false)
+                const validateFileButtonObject = document.createElement("button");
 
-      validateFileButtonDiv.innerHTML = ""
-      
-      validateFileButtonDiv.appendChild(validateFileButtonObject)
-      
-    }
+                validateFileButtonObject.textContent = "Validate"
 
-    
-    var jsonBodyTemplate = {
+                validateFileButtonObject.setAttribute('aria-label', 'Validate uploaded files')
+
+                validateFileButtonObject.addEventListener("click", () => validateDdi(), false)
+
+                validateFileButtonDiv.innerHTML = ""
+
+                validateFileButtonDiv.appendChild(validateFileButtonObject)
+
+            }
+
+
+            var jsonBodyTemplate = {
                 "document": {
                     "content": "string"
                 },
@@ -122,29 +121,28 @@ console.log(event.target.value)
                 },
                 "validationGateName": "BASIC",
 
-                }
-            
+            }
+
 
             function setInputToValidator() {
 
                 const reader = new FileReader()
+                
                 reader.readAsArrayBuffer(fileList[0])
+                
                 reader.onload = (function (event) {
                     jsonBodyTemplate.profile.content = profile
                     jsonBodyTemplate.document.content = new TextDecoder().decode(reader.result)
                 })
-                console.log(jsonBodyTemplate)
-                
+
             }
 
             function validateDdi() {
-                //setInputToValidator()
-                console.log(jsonBodyTemplate)
                 const cessdaValidationServiceURL = "https://cmv.cessda.eu/api/V0/Validation"
+                
                 executePostRequestWithoutToken(cessdaValidationServiceURL,
                     jsonBodyTemplate
                 ).then(apiResponse => {
-                    console.log(apiResponse)
                     var output
                     switch (apiResponse.status) {
 
@@ -170,8 +168,9 @@ console.log(event.target.value)
                     var output;
                     output = "<div>"
                     output = output + apiResponse.ConstraintViolation.map(
-                        x => "<div>" + x.message + "</div>").join("")
+                        violation => "<div>" + violation.message + "</div>").join("")
                     output = output + "</div>"
+                    
                     document.getElementById("validatorOutput").innerHTML = output
                 }
 
