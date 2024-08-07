@@ -127,14 +127,15 @@
             function setInputToValidator() {
 
                 const reader = new FileReader()
-                
-                reader.readAsArrayBuffer(fileList[0])
-                
-                reader.onload = (function (event) {
-                    jsonBodyTemplate.profile.content = profile
-                    jsonBodyTemplate.document.content = new TextDecoder().decode(reader.result)
-                })
 
+                if (!!fileList) {
+                    reader.readAsArrayBuffer(fileList[0])
+                
+                    reader.onload = (function (event) {
+                        jsonBodyTemplate.profile.content = profile
+                        jsonBodyTemplate.document.content = new TextDecoder().decode(reader.result)
+                    })
+                }
             }
 
             function validateDdi() {
